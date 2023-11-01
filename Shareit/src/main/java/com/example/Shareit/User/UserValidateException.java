@@ -1,5 +1,5 @@
 package com.example.Shareit.User;
-
+//Pull requests
 import org.springframework.http.HttpStatus;
 
 public class UserValidateException extends RuntimeException {
