@@ -1,5 +1,5 @@
 package com.example.Shareit.Exception;
-//Pull requests
+
 import com.example.Shareit.Booking.BookingValidateException;
 import com.example.Shareit.Item.ItemValidateException;
 import com.example.Shareit.User.UserValidateException;

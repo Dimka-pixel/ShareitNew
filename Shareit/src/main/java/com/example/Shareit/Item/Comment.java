@@ -1,5 +1,5 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import com.example.Shareit.User.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,9 +31,4 @@ public class Comment {
     private User user;
     @Column(name = "created")
     private LocalDateTime created;
-
-
-
-
-
 }

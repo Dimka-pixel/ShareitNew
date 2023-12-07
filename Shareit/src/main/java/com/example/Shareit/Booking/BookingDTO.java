@@ -1,10 +1,11 @@
 package com.example.Shareit.Booking;
-//Pull requests
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class BookingDTO {
     @NotNull
     @FutureOrPresent
     private LocalDateTime start;
-    @FutureOrPresent
+    @Future
     @NotNull
     private LocalDateTime end;
     private int bookerId;
@@ -27,6 +28,5 @@ public class BookingDTO {
     private int itemId;
     private String ItemName;
     private Status status;
-
 
 }

@@ -1,54 +1,48 @@
 package com.example.Shareit.Booking;
-//Pull requests
+
+import com.example.Shareit.Item.Item;
+import com.example.Shareit.Item.ItemMapper;
 import com.example.Shareit.Item.ItemRepository;
 import com.example.Shareit.User.User;
+import com.example.Shareit.User.UserMapper;
 import com.example.Shareit.User.UserRepository;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityNotFoundException;
+@Mapper(uses = {UserMapper.class, ItemMapper.class}, componentModel = "spring", imports = {UserRepository.class, ItemRepository.class})
+public abstract class BookingMapper {
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    ItemRepository itemRepository;
 
-@Component
-@Data
-@RequiredArgsConstructor
-public class BookingMapper {
+    abstract BookingView toBookingView(Booking booking);
 
-    private final UserRepository userRepository;
-
-    private final ItemRepository itemRepository;
-
-
-    public BookingDTO mapBookingToDto(Booking booking) {
-        BookingDTO bookingDTO = null;
-        if (booking != null) {
-            bookingDTO = BookingDTO.builder()
-                    .id(booking.getId())
-                    .start(booking.getStart())
-                    .end(booking.getEnd())
-                    .bookerId(booking.getBooker().getId())
-                    .itemId(booking.getItem().getId())
-                    .ItemName(booking.getItem().getName())
-                    .status(booking.getStatus())
-                    .build();
+    public BookingDTO toBookingDTO(Booking booking) {
+        if (booking == null) {
+            return null;
         }
-
-        return bookingDTO;
+        return BookingDTO.builder()
+                .id(booking.getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .bookerId(booking.getBooker().getId())
+                .itemId(booking.getItem().getId())
+                .ItemName(booking.getItem().getName())
+                .status(booking.getStatus())
+                .build();
     }
 
-    public Booking mapDtoToBooking(BookingDTO bookingDTO) throws EntityNotFoundException {
-        Booking booking = null;
+    public Booking toBooking(BookingDTO bookingDTO) {
+        Item item = itemRepository.findById(bookingDTO.getItemId());
         User user = userRepository.findById(bookingDTO.getBookerId());
-        if (bookingDTO != null) {
-            booking = Booking.builder()
-                    .id(bookingDTO.getId())
-                    .start(bookingDTO.getStart())
-                    .end(bookingDTO.getEnd())
-                    .booker(user)
-                    .item(itemRepository.getReferenceById(bookingDTO.getItemId()))
-                    .status(bookingDTO.getStatus())
-                    .build();
-        }
-        return booking;
+        return Booking.builder()
+                .id(bookingDTO.getId())
+                .start(bookingDTO.getStart())
+                .end(bookingDTO.getEnd())
+                .booker(user)
+                .item(item)
+                .status(bookingDTO.getStatus())
+                .build();
     }
 }

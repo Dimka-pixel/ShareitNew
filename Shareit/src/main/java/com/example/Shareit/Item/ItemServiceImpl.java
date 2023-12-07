@@ -1,15 +1,13 @@
 package com.example.Shareit.Item;
-//Pull requests
-import com.example.Shareit.Booking.Booking;
-import com.example.Shareit.Booking.BookingMapper;
-import com.example.Shareit.Booking.BookingRepository;
-import com.example.Shareit.Booking.BookingValidateException;
+
+import com.example.Shareit.Booking.*;
 import com.example.Shareit.User.User;
 import com.example.Shareit.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,17 +22,20 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final BookingMapper bookingMapper;
     private final CommentMapper commentMapper;
+    private final BookingMapper bookingMapper;
+    private final ItemMapper itemMapper;
+
 
     @Override
+    @Transactional
     public ItemDTO addItem(int id, ItemDTO itemDto) {
-        Item item = ItemMapper.mapDtoToItem(itemDto);
+        Item item = itemMapper.toItem(itemDto);
         User user = userRepository.findById(id);
         if (user != null) {
             item.setOwner(user);
             itemRepository.save(item);
-            ItemDTO itemDTO = ItemMapper.mapItemToDto(item);
+            ItemDTO itemDTO = itemMapper.toItemDTO(item);
             log.info("return {}", item);
             return itemDTO;
         } else {
@@ -44,9 +45,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDTO updateItem(int userId, int itemId, ItemDTO itemDto) {
         User user = userRepository.findById(userId);
-        Item item = itemRepository.getReferenceById(itemId);
+        Item item = itemRepository.findById(itemId);
         if (user.equals(item.getOwner())) {
             if (itemDto.getName() != null) {
                 if (!itemDto.getName().isBlank()) {
@@ -65,11 +67,11 @@ public class ItemServiceImpl implements ItemService {
                 }
             }
             if (itemDto.getAvailable() != null) {
-                item.set_available(itemDto.getAvailable());
+                item.setAvailable(itemDto.getAvailable());
             }
-            ItemDTO itemDTO = ItemMapper.mapItemToDto(itemRepository.save(item));
+            ItemDTO itemDTO = itemMapper.toItemDTO(item);
             log.info("return {}", itemDTO);
-            return ItemMapper.mapItemToDto(itemRepository.save(item));
+            return itemDTO;
         } else {
             log.warn("This user is not owner");
             throw new ItemValidateException("This user is not owner", HttpStatus.NOT_FOUND);
@@ -82,23 +84,29 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime dateNow = LocalDateTime.now();
         List<CommentDTO> comments = new ArrayList<>();
         Item item = itemRepository.getReferenceById(itemId);
-        ItemDTO itemDTO = ItemMapper.mapItemToDto(item);
+        ItemDTO itemDTO = itemMapper.toItemDTO(item);
+        BookingDTO nextBooking = bookingMapper.toBookingDTO(bookingRepository.
+                findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow));
         if (item.getOwner().getId() != userId) {
             log.info("return {}", itemDTO);
         } else {
-            itemDTO.setLastBooking(bookingMapper.mapBookingToDto(bookingRepository.findFirstByItemIdAndEndIsBeforeOrderByStartDesc(item.getId(), dateNow)));
-            itemDTO.setNextBooking(bookingMapper.mapBookingToDto(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow)));
+            itemDTO.setLastBooking(bookingMapper.toBookingDTO(bookingRepository.
+                    findFirstByItemIdAndEndIsBeforeOrderByStartDesc(item.getId(), dateNow)));
+            if (nextBooking == null || nextBooking.getStatus() != Status.REJECTED) {
+                itemDTO.setNextBooking(nextBooking);
+            }
         }
         for (Comment comment :
-                commentRepository.findByItem_Id(itemId)) {
-            comments.add(commentMapper.mapToCommentDTO(comment));
+                commentRepository.findByItemId(itemId)) {
+            comments.add(commentMapper.toCommentDTO(comment));
         }
         itemDTO.setComments(comments);
+        log.info("return itemDTO {} ", itemDTO);
         return itemDTO;
     }
 
     @Override
-    public List<ItemDTO> getAllItem(int id) {
+    public List<ItemDTO> getAllItemsByOwnerId(int id) {
         LocalDateTime dateNow = LocalDateTime.now();
         List<ItemDTO> items = new ArrayList<>();
         List<CommentDTO> comments = new ArrayList<>();
@@ -106,13 +114,16 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(id);
         if (user != null) {
             for (Item item : allItems) {
+                BookingDTO nextBooking = bookingMapper.toBookingDTO(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow));
                 if (!allItems.isEmpty() && user.equals(item.getOwner())) {
-                    ItemDTO itemDTO = ItemMapper.mapItemToDto(item);
-                    itemDTO.setLastBooking(bookingMapper.mapBookingToDto(bookingRepository.findFirstByItemIdAndEndIsBeforeOrderByStartDesc(item.getId(), dateNow)));
-                    itemDTO.setNextBooking(bookingMapper.mapBookingToDto(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow)));
+                    ItemDTO itemDTO = itemMapper.toItemDTO(item);
+                    itemDTO.setLastBooking(bookingMapper.toBookingDTO(bookingRepository.findFirstByItemIdAndEndIsBeforeOrderByStartDesc(item.getId(), dateNow)));
+                    if (nextBooking == null || nextBooking.getStatus() != Status.REJECTED) {
+                        itemDTO.setNextBooking(nextBooking);
+                    }
                     for (Comment comment :
-                            commentRepository.findByItem_Id(item.getId())) {
-                        comments.add(commentMapper.mapToCommentDTO(comment));
+                            commentRepository.findByItemId(item.getId())) {
+                        comments.add(commentMapper.toCommentDTO(comment));
                     }
                     itemDTO.setComments(comments);
                     items.add(itemDTO);
@@ -130,8 +141,8 @@ public class ItemServiceImpl implements ItemService {
         if (text != null) {
             for (Item item : allItems) {
                 if (!text.isEmpty() && !allItems.isEmpty() && item.getDescription().toLowerCase().
-                        contains(text.toLowerCase()) && item.is_available()) {
-                    items.add(ItemMapper.mapItemToDto(item));
+                        contains(text.toLowerCase()) && item.isAvailable()) {
+                    items.add(itemMapper.toItemDTO(item));
                 }
             }
         } else {
@@ -143,6 +154,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public CommentDTO addComment(Comment comment, int userId, int itemId) {
         LocalDateTime dateNow = LocalDateTime.now();
         List<Booking> booking = bookingRepository.findByItemIdAndBookerIdLikeAndEndIsBefore(itemId, userId, dateNow);
@@ -152,7 +164,7 @@ public class ItemServiceImpl implements ItemService {
             comment.setCreated(LocalDateTime.now());
             comment.setItem(item);
             comment.setUser(user);
-            return commentMapper.mapToCommentDTO(commentRepository.save(comment));
+            return commentMapper.toCommentDTO(commentRepository.save(comment));
         } else {
             log.warn("leave a comment only after the booking is completed");
             throw new BookingValidateException("Cannot leave a comment only after the booking is completed", HttpStatus.BAD_REQUEST);

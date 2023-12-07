@@ -1,5 +1,5 @@
 package com.example.Shareit.User;
-//Pull requests
+
 import java.util.List;
 
 public interface UserService {
@@ -12,5 +12,5 @@ public interface UserService {
 
     void deleteUser(int id);
 
-    public List<UserDTO> getAllUsers();
+    List<UserDTO> getAllUsers();
 }

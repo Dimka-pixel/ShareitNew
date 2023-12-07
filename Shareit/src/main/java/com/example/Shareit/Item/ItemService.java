@@ -1,5 +1,5 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public interface ItemService {
 
     ItemDTO getItemById(int userId, int ItemId);
 
-    List<ItemDTO> getAllItem(int id);
+    List<ItemDTO> getAllItemsByOwnerId(int id);
 
     List<ItemDTO> searchItems(String text);
 

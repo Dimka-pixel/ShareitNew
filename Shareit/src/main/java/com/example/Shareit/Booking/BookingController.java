@@ -1,5 +1,5 @@
 package com.example.Shareit.Booking;
-//Pull requests
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class BookingController {
     private final BookingServiceImpl bookingService;
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     BookingView addBooking(@Validated @RequestBody BookingDTO bookingDTO, @RequestHeader(value = HEADER_NAME) int userId) {
         log.info(" request POST/bookings ");
         return bookingService.addBooking(bookingDTO, userId);
@@ -35,7 +35,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     @ResponseStatus(value = HttpStatus.OK)
-    BookingView getBookingByID(@RequestHeader(value = HEADER_NAME) int userId, @PathVariable int bookingId) {
+    BookingView getBookingById(@RequestHeader(value = HEADER_NAME) int userId, @PathVariable int bookingId) {
         log.info(" request GET/bookings/{bookingId} ");
         return bookingService.getBookingById(userId, bookingId);
     }
@@ -53,6 +53,5 @@ public class BookingController {
         log.info("request GET/bookings/owner");
         return bookingService.getAllBookingByItem(userId, state);
     }
-
 
 }

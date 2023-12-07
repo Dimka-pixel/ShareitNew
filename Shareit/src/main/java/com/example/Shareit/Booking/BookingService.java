@@ -1,5 +1,5 @@
 package com.example.Shareit.Booking;
-//Pull requests
+
 import java.util.List;
 
 public interface BookingService {
@@ -10,10 +10,8 @@ public interface BookingService {
 
     BookingView getBookingById(int bookingId, int userId);
 
-
     List<BookingView> getAllBookingByUser(int userId, String requestState);
 
     List<BookingView> getAllBookingByItem(int userId, String requestState);
-
 
 }

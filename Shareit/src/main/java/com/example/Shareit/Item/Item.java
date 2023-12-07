@@ -1,5 +1,5 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import com.example.Shareit.Request.ItemRequest;
 import com.example.Shareit.User.User;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,7 @@ public class Item {
 
     @NotNull
     @Column(name = "is_available")
-    private boolean is_available;
+    private boolean available;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

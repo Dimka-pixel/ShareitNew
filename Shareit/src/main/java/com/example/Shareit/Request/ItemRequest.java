@@ -1,5 +1,5 @@
 package com.example.Shareit.Request;
-//Pull requests
+
 import com.example.Shareit.User.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +21,6 @@ public class ItemRequest {
     @NotBlank
     @Column(name = "description")
     private String description;
-
     @ManyToOne
     @JoinColumn(name = "requestor_id")
     private User user;

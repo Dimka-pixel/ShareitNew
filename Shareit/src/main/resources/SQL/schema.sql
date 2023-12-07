@@ -44,4 +44,4 @@
         FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
     );
 
-//Pull requests
+// requests

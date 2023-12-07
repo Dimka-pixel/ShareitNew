@@ -1,5 +1,5 @@
 package com.example.Shareit.User;
-//Pull requests
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUser(@PathVariable int id) {
+    public UserDTO getUserById(@PathVariable int id) {
         log.info("response GET /users/{id} id = {}", id);
         return userService.getUserById(id);
 
@@ -33,7 +33,7 @@ public class UserController {
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDTO addUser(@Validated({AllMappingValidated.class, ExceptPatchMappingValidated.class})
                            @RequestBody UserDTO userDto) {
         log.info("response POST /users");
@@ -54,6 +54,4 @@ public class UserController {
         log.info("response Patch /users/{id} id = {}", id);
         return userService.updateUser(userDTO, id);
     }
-
-
 }

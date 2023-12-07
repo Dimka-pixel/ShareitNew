@@ -1,5 +1,5 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,15 +10,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/items")
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class ItemController {
     public static final String HEADER_NAME = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ItemDTO createItem(@RequestHeader(value = HEADER_NAME) int userId, @Validated @RequestBody ItemDTO itemDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ItemDTO addItem(@RequestHeader(value = HEADER_NAME) int userId, @Validated @RequestBody ItemDTO itemDto) {
         log.info("request POST /items");
         return itemService.addItem(userId, itemDto);
     }
@@ -34,7 +34,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDTO> getAllItemsByOwnerId(@RequestHeader(value = HEADER_NAME) int userId) {
         log.info("request GET /items");
-        return itemService.getAllItem(userId);
+        return itemService.getAllItemsByOwnerId(userId);
     }
 
     @GetMapping("/search")

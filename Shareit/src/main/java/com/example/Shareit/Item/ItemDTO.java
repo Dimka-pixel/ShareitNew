@@ -1,7 +1,6 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import com.example.Shareit.Booking.BookingDTO;
-import com.example.Shareit.Booking.BookingView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +25,5 @@ public class ItemDTO {
     private Boolean available;
     private BookingDTO lastBooking;
     private BookingDTO nextBooking;
-    private List <CommentDTO> comments;
-
-
-
+    private List<CommentDTO> comments;
 }

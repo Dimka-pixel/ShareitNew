@@ -1,5 +1,5 @@
 package com.example.Shareit.Item;
-//Pull requests
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class CommentDTO {
-    int id;
+    private int id;
     @NotBlank
-    String text;
-    String authorName;
-    LocalDateTime created;
+    private String text;
+    private String authorName;
+    private LocalDateTime created;
 
 }

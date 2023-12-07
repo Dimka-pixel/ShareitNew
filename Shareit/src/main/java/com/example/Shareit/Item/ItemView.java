@@ -1,7 +1,15 @@
 package com.example.Shareit.Item;
-//Pull requests
-public interface ItemView {
-    int getId();
 
-    String getName();
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ItemView {
+    int id;
+    String name;
 }

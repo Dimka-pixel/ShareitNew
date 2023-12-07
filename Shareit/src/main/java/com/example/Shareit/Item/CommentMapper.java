@@ -1,24 +1,10 @@
 package com.example.Shareit.Item;
-//Pull requests
-import com.example.Shareit.User.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Component
-public class CommentMapper {
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-    private final UserRepository userRepository;
-
-    public CommentDTO mapToCommentDTO(Comment comment) {
-        CommentDTO commentDTO = CommentDTO.builder()
-                .id(comment.getId())
-                .authorName(comment.getUser().getName())
-                .text(comment.getText())
-                .created(comment.getCreated())
-                .build();
-        return commentDTO;
-    }
-
-
+@Mapper
+public interface CommentMapper {
+    @Mapping(target = "authorName", expression = "java(comment.getUser().getName())")
+    CommentDTO toCommentDTO(Comment comment);
 }
