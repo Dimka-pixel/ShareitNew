@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface BookingService {
 
-    BookingView addBooking(BookingDTO bookingDTO, int userId);
+    BookingView addBooking(BookingDto bookingDTO, int userId);
 
     BookingView updateBookingStatus(int bookingId, int userId, boolean approved);
 

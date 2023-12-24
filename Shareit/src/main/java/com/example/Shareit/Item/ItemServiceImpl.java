@@ -29,13 +29,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDTO addItem(int id, ItemDTO itemDto) {
+    public ItemDto addItem(int id, ItemDto itemDto) {
         Item item = itemMapper.toItem(itemDto);
         User user = userRepository.findById(id);
         if (user != null) {
             item.setOwner(user);
             itemRepository.save(item);
-            ItemDTO itemDTO = itemMapper.toItemDTO(item);
+            ItemDto itemDTO = itemMapper.toItemDTO(item);
             log.info("return {}", item);
             return itemDTO;
         } else {
@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDTO updateItem(int userId, int itemId, ItemDTO itemDto) {
+    public ItemDto updateItem(int userId, int itemId, ItemDto itemDto) {
         User user = userRepository.findById(userId);
         Item item = itemRepository.findById(itemId);
         if (user.equals(item.getOwner())) {
@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
             if (itemDto.getAvailable() != null) {
                 item.setAvailable(itemDto.getAvailable());
             }
-            ItemDTO itemDTO = itemMapper.toItemDTO(item);
+            ItemDto itemDTO = itemMapper.toItemDTO(item);
             log.info("return {}", itemDTO);
             return itemDTO;
         } else {
@@ -80,12 +80,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDTO getItemById(int userId, int itemId) {
+    public ItemDto getItemById(int userId, int itemId) {
         LocalDateTime dateNow = LocalDateTime.now();
-        List<CommentDTO> comments = new ArrayList<>();
+        List<CommentDto> comments = new ArrayList<>();
         Item item = itemRepository.getReferenceById(itemId);
-        ItemDTO itemDTO = itemMapper.toItemDTO(item);
-        BookingDTO nextBooking = bookingMapper.toBookingDTO(bookingRepository.
+        ItemDto itemDTO = itemMapper.toItemDTO(item);
+        BookingDto nextBooking = bookingMapper.toBookingDTO(bookingRepository.
                 findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow));
         if (item.getOwner().getId() != userId) {
             log.info("return {}", itemDTO);
@@ -106,17 +106,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDTO> getAllItemsByOwnerId(int id) {
+    public List<ItemDto> getAllItemsByOwnerId(int id) {
         LocalDateTime dateNow = LocalDateTime.now();
-        List<ItemDTO> items = new ArrayList<>();
-        List<CommentDTO> comments = new ArrayList<>();
+        List<ItemDto> items = new ArrayList<>();
+        List<CommentDto> comments = new ArrayList<>();
         List<Item> allItems = itemRepository.findAll();
         User user = userRepository.findById(id);
         if (user != null) {
             for (Item item : allItems) {
-                BookingDTO nextBooking = bookingMapper.toBookingDTO(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow));
+                BookingDto nextBooking = bookingMapper.toBookingDTO(bookingRepository.findFirstByItemIdAndStartIsAfterOrderByStartAsc(item.getId(), dateNow));
                 if (!allItems.isEmpty() && user.equals(item.getOwner())) {
-                    ItemDTO itemDTO = itemMapper.toItemDTO(item);
+                    ItemDto itemDTO = itemMapper.toItemDTO(item);
                     itemDTO.setLastBooking(bookingMapper.toBookingDTO(bookingRepository.findFirstByItemIdAndEndIsBeforeOrderByStartDesc(item.getId(), dateNow)));
                     if (nextBooking == null || nextBooking.getStatus() != Status.REJECTED) {
                         itemDTO.setNextBooking(nextBooking);
@@ -135,8 +135,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDTO> searchItems(String text) {
-        List<ItemDTO> items = new ArrayList<>();
+    public List<ItemDto> searchItems(String text) {
+        List<ItemDto> items = new ArrayList<>();
         List<Item> allItems = itemRepository.findAll();
         if (text != null) {
             for (Item item : allItems) {
@@ -155,7 +155,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public CommentDTO addComment(Comment comment, int userId, int itemId) {
+    public CommentDto addComment(Comment comment, int userId, int itemId) {
         LocalDateTime dateNow = LocalDateTime.now();
         List<Booking> booking = bookingRepository.findByItemIdAndBookerIdLikeAndEndIsBefore(itemId, userId, dateNow);
         User user = userRepository.findById(userId);

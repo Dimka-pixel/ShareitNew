@@ -18,42 +18,42 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDTO addItem(@RequestHeader(value = HEADER_NAME) int userId, @Validated @RequestBody ItemDTO itemDto) {
+    public ItemDto addItem(@RequestHeader(value = HEADER_NAME) int userId, @Validated @RequestBody ItemDto itemDto) {
         log.info("request POST /items");
         return itemService.addItem(userId, itemDto);
     }
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO getItemById(@RequestHeader(value = HEADER_NAME) int userId, @PathVariable int itemId) {
+    public ItemDto getItemById(@RequestHeader(value = HEADER_NAME) int userId, @PathVariable int itemId) {
         log.info("request GET /items/{ItemId} ItemId = {}", itemId);
         return itemService.getItemById(userId, itemId);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDTO> getAllItemsByOwnerId(@RequestHeader(value = HEADER_NAME) int userId) {
+    public List<ItemDto> getAllItemsByOwnerId(@RequestHeader(value = HEADER_NAME) int userId) {
         log.info("request GET /items");
         return itemService.getAllItemsByOwnerId(userId);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDTO> searchItems(@RequestParam String text) {
+    public List<ItemDto> searchItems(@RequestParam String text) {
         log.info("request GET /items/search");
         return itemService.searchItems(text);
     }
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem(@RequestHeader(value = HEADER_NAME) int userId,
-                              @PathVariable int itemId, @RequestBody ItemDTO itemDto) {
+    public ItemDto updateItem(@RequestHeader(value = HEADER_NAME) int userId,
+                              @PathVariable int itemId, @RequestBody ItemDto itemDto) {
         log.info("request PATCH /items/{itemId} itemId = {}", itemId);
         return itemService.updateItem(userId, itemId, itemDto);
     }
 
     @PostMapping("{itemId}/comment")
-    public CommentDTO addComment(@Validated @RequestBody Comment comment, @RequestHeader(value = HEADER_NAME) int userId, @PathVariable int itemId) {
+    public CommentDto addComment(@Validated @RequestBody Comment comment, @RequestHeader(value = HEADER_NAME) int userId, @PathVariable int itemId) {
         log.info("request PATCH /items/{itemId}/comment");
         return itemService.addComment(comment, userId, itemId);
     }

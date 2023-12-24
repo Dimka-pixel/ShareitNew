@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ItemView {
-    int id;
-    String name;
+    private int id;
+    private String name;
 }

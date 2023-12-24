@@ -19,16 +19,16 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO addUser(UserDTO userDto) {
+    public UserDto addUser(UserDto userDto) {
         User user = userMapper.toUser(userDto);
         log.info("return {}", userDto);
         return userMapper.toUserDTO(userRepository.save(user));
     }
 
     @Override
-    public UserDTO getUserById(int id) {
+    public UserDto getUserById(int id) {
         User user = userRepository.getReferenceById(id);
-        UserDTO userDTO;
+        UserDto userDTO;
         if (user != null) {
             userDTO = userMapper.toUserDTO(user);
         } else {
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO updateUser(UserDTO userDTO, int id) {
+    public UserDto updateUser(UserDto userDTO, int id) {
         User user = userRepository.findById(id);
         User userWithEmail = userRepository.findByEmail(userDTO.getEmail());
         if (userDTO.getEmail() != null) {
@@ -76,8 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<UserDTO> users = new ArrayList<>();
+    public List<UserDto> getAllUsers() {
+        List<UserDto> users = new ArrayList<>();
         List<User> allUsers = userRepository.findAll();
         if (!allUsers.isEmpty()) {
             for (User user : allUsers) {

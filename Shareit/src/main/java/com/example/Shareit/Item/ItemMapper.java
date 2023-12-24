@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 public interface ItemMapper {
     ItemView toItemView(Item item);
 
-    Item toItem(ItemDTO itemDTO);
+    Item toItem(ItemDto itemDTO);
 
-    ItemDTO toItemDTO(Item item);
+    ItemDto toItemDTO(Item item);
 }

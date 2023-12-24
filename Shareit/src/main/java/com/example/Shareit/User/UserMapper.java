@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     UserView toUserView(User user);
 
-    UserDTO toUserDTO(User user);
+    UserDto toUserDTO(User user);
 
-    User toUser(UserDTO userDTO);
+    User toUser(UserDto userDTO);
 }

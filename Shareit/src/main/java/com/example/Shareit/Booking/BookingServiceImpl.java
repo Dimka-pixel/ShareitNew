@@ -24,7 +24,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingView addBooking(BookingDTO bookingDTO, int userId) {
+    public BookingView addBooking(BookingDto bookingDTO, int userId) {
         bookingDTO.setBookerId(userId);
         Booking booking = bookingMapper.toBooking(bookingDTO);
         if (booking.getItem() != null) {

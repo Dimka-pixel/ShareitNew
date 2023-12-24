@@ -20,7 +20,7 @@ public class BookingController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    BookingView addBooking(@Validated @RequestBody BookingDTO bookingDTO, @RequestHeader(value = HEADER_NAME) int userId) {
+    BookingView addBooking(@Validated @RequestBody BookingDto bookingDTO, @RequestHeader(value = HEADER_NAME) int userId) {
         log.info(" request POST/bookings ");
         return bookingService.addBooking(bookingDTO, userId);
     }
