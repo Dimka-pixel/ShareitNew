@@ -1,28 +1,12 @@
 package com.example.Shareit.User;
 
-public class UserMapper {
+import org.mapstruct.Mapper;
 
-    public static UserDTO mapUserToDto(User user) {
-        UserDTO userDto = new UserDTO();
-        if (user != null) {
-            userDto = UserDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
-                    .email(user.getEmail())
-                    .build();
-        }
-        return userDto;
-    }
+@Mapper
+public interface UserMapper {
+    UserView toUserView(User user);
 
-    public static User mapDtoToUser(UserDTO userDto) {
-        User user = new User();
-        if (userDto != null) {
-            user = User.builder()
-                    .id(userDto.getId())
-                    .name(userDto.getName())
-                    .email(userDto.getEmail())
-                    .build();
-        }
-        return user;
-    }
+    UserDto toUserDTO(User user);
+
+    User toUser(UserDto userDTO);
 }

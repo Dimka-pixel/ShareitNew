@@ -1,5 +1,14 @@
 package com.example.Shareit.User;
 
-public interface UserView {
-    int getId();
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserView {
+    private int id;
 }

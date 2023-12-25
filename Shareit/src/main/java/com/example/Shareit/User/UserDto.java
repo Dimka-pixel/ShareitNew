@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDTO {
+public class UserDto {
 
     private int id;
     @NotBlank(groups = ExceptPatchMappingValidated.class)

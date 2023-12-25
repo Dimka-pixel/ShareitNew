@@ -2,19 +2,28 @@ package com.example.Shareit.Booking;
 
 import com.example.Shareit.Item.ItemView;
 import com.example.Shareit.User.UserView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public interface BookingView {
-    int getId();
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class BookingView {
 
-    LocalDateTime getStart();
+    int id;
 
-    LocalDateTime getEnd();
+    LocalDateTime start;
 
-    UserView getBooker();
+    LocalDateTime end;
 
-    ItemView getItem();
+    UserView booker;
 
-    Status getStatus();
+    ItemView item;
+
+    Status status;
 }

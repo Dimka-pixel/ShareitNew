@@ -21,7 +21,6 @@ public class ItemRequest {
     @NotBlank
     @Column(name = "description")
     private String description;
-
     @ManyToOne
     @JoinColumn(name = "requestor_id")
     private User user;

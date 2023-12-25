@@ -1,7 +1,6 @@
 package com.example.Shareit.Item;
 
-import com.example.Shareit.Booking.BookingDTO;
-import com.example.Shareit.Booking.BookingView;
+import com.example.Shareit.Booking.BookingDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ItemDTO {
+public class ItemDto {
 
     private int id;
     @NotBlank
@@ -24,10 +23,7 @@ public class ItemDTO {
     private String description;
     @NotNull
     private Boolean available;
-    private BookingDTO lastBooking;
-    private BookingDTO nextBooking;
-    private List <CommentDTO> comments;
-
-
-
+    private BookingDto lastBooking;
+    private BookingDto nextBooking;
+    private List<CommentDto> comments;
 }

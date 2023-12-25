@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUser(@PathVariable int id) {
+    public UserDto getUserById(@PathVariable int id) {
         log.info("response GET /users/{id} id = {}", id);
         return userService.getUserById(id);
 
@@ -26,16 +26,16 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         log.info("response GET /users");
         return userService.getAllUsers();
     }
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public UserDTO addUser(@Validated({AllMappingValidated.class, ExceptPatchMappingValidated.class})
-                           @RequestBody UserDTO userDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto addUser(@Validated({AllMappingValidated.class, ExceptPatchMappingValidated.class})
+                           @RequestBody UserDto userDto) {
         log.info("response POST /users");
         return userService.addUser(userDto);
     }
@@ -49,11 +49,9 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO updateUser(@Validated(AllMappingValidated.class) @RequestBody UserDTO userDTO,
+    public UserDto updateUser(@Validated(AllMappingValidated.class) @RequestBody UserDto userDTO,
                               @PathVariable int id) {
         log.info("response Patch /users/{id} id = {}", id);
         return userService.updateUser(userDTO, id);
     }
-
-
 }

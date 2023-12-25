@@ -21,7 +21,7 @@ public class Item {
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    public int id;
 
     @NotBlank
     @Column(name = "item_name")
@@ -33,7 +33,7 @@ public class Item {
 
     @NotNull
     @Column(name = "is_available")
-    private boolean is_available;
+    private boolean available;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

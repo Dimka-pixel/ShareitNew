@@ -12,23 +12,25 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    private final UserMapper userMapper;
+
+    @Transactional
     @Override
-    public UserDTO addUser(UserDTO userDto) {
-        User user = UserMapper.mapDtoToUser(userDto);
+    public UserDto addUser(UserDto userDto) {
+        User user = userMapper.toUser(userDto);
         log.info("return {}", userDto);
-        return UserMapper.mapUserToDto(userRepository.save(user));
+        return userMapper.toUserDTO(userRepository.save(user));
     }
 
     @Override
-    public UserDTO getUserById(int id) {
+    public UserDto getUserById(int id) {
         User user = userRepository.getReferenceById(id);
-        UserDTO userDTO;
+        UserDto userDTO;
         if (user != null) {
-            userDTO = UserMapper.mapUserToDto(user);
+            userDTO = userMapper.toUserDTO(user);
         } else {
             log.warn("User with id = {} not found", id);
             throw new UserValidateException("User with id " + id + " not found", HttpStatus.NOT_FOUND);
@@ -37,9 +39,10 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
+    @Transactional
     @Override
-    public UserDTO updateUser(UserDTO userDTO, int id) {
-        User user = userRepository.getReferenceById(id);
+    public UserDto updateUser(UserDto userDTO, int id) {
+        User user = userRepository.findById(id);
         User userWithEmail = userRepository.findByEmail(userDTO.getEmail());
         if (userDTO.getEmail() != null) {
             if (!userDTO.getEmail().isBlank()) {
@@ -62,10 +65,10 @@ public class UserServiceImpl implements UserService {
                 throw new UserValidateException("The field \"name\" should not be empty", HttpStatus.BAD_REQUEST);
             }
         }
-        userRepository.save(user);
-        return UserMapper.mapUserToDto(user);
+        return userMapper.toUserDTO(user);
     }
 
+    @Transactional
     @Override
     public void deleteUser(int id) {
         log.info("Delete user with id = {}", id);
@@ -73,12 +76,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<UserDTO> users = new ArrayList<>();
+    public List<UserDto> getAllUsers() {
+        List<UserDto> users = new ArrayList<>();
         List<User> allUsers = userRepository.findAll();
         if (!allUsers.isEmpty()) {
             for (User user : allUsers) {
-                users.add(UserMapper.mapUserToDto(user));
+                users.add(userMapper.toUserDTO(user));
             }
         }
         log.info("return {}", users);
